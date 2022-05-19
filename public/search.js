@@ -4,7 +4,7 @@ image = "";
 function getPokemonByType(typeOfPokemon) {
     $("main").empty();
 
-    for (i = 1; i < 151; i++) {
+    for (i = 1; i < 152; i++) {
 
         $.ajax({
             url: `https://pokeapi.co/api/v2/pokemon/${i}/`,
@@ -38,7 +38,7 @@ function getPokemonByName() {
     $.ajax({
         url: `https://pokeapi.co/api/v2/pokemon/${pokeName}/`,
         type: "GET",
-        "success": function(data) {
+        success: function(data) {
 
             if (pokeName == Number(pokeName)) {
                 alert("Please enter a string")
@@ -54,7 +54,42 @@ function getPokemonByName() {
                     </div>`;
 
                 $("main").append(image);
+                insertSearchTimeline();
             };
+        }
+    });
+};
+
+var now = new Date(Date.now());
+var formatted = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
+
+function insertTypeTimeline(pokeType) {
+    $.ajax({
+        url: `http://localhost:3000/timeline/create`,
+        type: "PUT",
+        data: {
+            text: `Client searched by Type: ${pokeType}`,
+            time: `At: ${now}`,
+            hits: 1
+        },
+        success: function(r) {
+            console.log(r);
+        }
+    });
+};
+
+function insertSearchTimeline(pokeName) {
+    pokeName = $("#poke_name").val();
+    $.ajax({
+        url: `http://localhost:3000/timeline/create`,
+        type: "PUT",
+        data: {
+            text: `Client searched for: ${pokeName}`,
+            time: `At: ${now}`,
+            hits: 1
+        },
+        success: function(r) {
+            console.log(r);
         }
     });
 };
@@ -69,13 +104,10 @@ function setup() {
     $("#poke_type").change(() => {
         pokeType = $("#poke_type option:selected").val();
         getPokemonByType(pokeType);
-    })
 
-    // search by weight
-    //$('#poke_weight').click(getPokemonByWeight);
 
-    // search by height
-    //$('#poke_height').click(getPokemonByHeight);
+        insertTypeTimeline(pokeType);
+    });
 
     // search by name
     $("#name_search_button").click(getPokemonByName);
