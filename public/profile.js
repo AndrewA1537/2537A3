@@ -19,7 +19,7 @@ function loadProfile() {
                 `
                 order[0].cart.forEach(pokemon => {
                     element += `<p>${pokemon.pokemonId} ${pokemon.quantity}</p>`;
-                        // // await loadPokemonToDOM(pokemon.pokemonId, pokemon.quantity)
+                        // // await loadPokemon(pokemon.pokemonId, pokemon.quantity)
                         // $("#subtotal").text(subtotal.toFixed(2))
                         // $("#tax").text((subtotal * taxRate).toFixed(2))
                         // $("#total").text((subtotal * taxRate + subtotal).toFixed(2))

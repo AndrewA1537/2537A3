@@ -2,13 +2,7 @@ var taxAmount = 0.06;
 var subtotal = 0;
 let userId = 1;
 
-async function loadPokemonById(pokemonId) {
-    const pokemon = await $.get(`/pokemon/${pokemonId}/`, function () {
-    });
-    return pokemon[0];
-}
-
-async function loadPokemonToDOM(pokemonId, quantity) {
+async function loadPokemon(pokemonId, quantity) {
     let pokemon = await loadPokemonById(pokemonId);
     let tmp = `
                 <div class="row">
@@ -16,6 +10,7 @@ async function loadPokemonToDOM(pokemonId, quantity) {
                         <img src="${pokemon.sprite}" alt="${pokemon.name}" style="width:100%" 
                         onclick="location.href='pokemon.html?id=${pokemon.id}'" class="pokemon-image-thumb">
                     </div>
+
                     <div class="row pokemon-buy-details">
                         <h3 class="col card-price">${pokemon.name}</h3>
                         <h3 class="col card-price">$${pokemon.price}</h3>
@@ -29,21 +24,17 @@ async function loadPokemonToDOM(pokemonId, quantity) {
     subtotal += parseFloat(pokemon.price) * parseInt(quantity);
 }
 
-function loadCart() {
-    let data = {
-        userId: userId,
-    }
+function loadShoppingCart() {
+    let data = {userId: userId}
 
     fetch('/cart', {
         method: 'POST',
         body: JSON.stringify(data),
-        headers: {
-            'Content-type': 'application/json'
-        }
+        headers: { 'Content-type': 'application/json' }
     }).then(response => response.json()).then((data) => {
         subtotal = 0;
         data.cart.forEach(async (pokemon) => {
-            await loadPokemonToDOM(pokemon.pokemonId, pokemon.quantity)
+            await loadPokemon(pokemon.pokemonId, pokemon.quantity)
             $("#subtotal").text(subtotal.toFixed(2))
             $("#tax").text((subtotal * taxAmount).toFixed(2))
             $("#total").text((subtotal * taxAmount + subtotal).toFixed(2))
@@ -51,4 +42,10 @@ function loadCart() {
     });
 };
 
-loadCart();
+async function loadPokemonById(pokemonId) {
+    const pokemon = await $.get(`/pokemon/${pokemonId}/`, function () {
+    });
+    return pokemon[0];
+}
+
+loadShoppingCart();

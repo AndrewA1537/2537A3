@@ -1,3 +1,22 @@
+function register() {
+    let data = {
+        username: $("#username").val(),
+        password: $("#password").val()
+    }
+
+    fetch('/register', {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: {
+            'Content-type': 'application/json'
+        }
+    }).then(response => response.json()).then((data) => {
+        // On success, redirect (refresh) to login
+        console.log(data.success);
+        console.log(data.message);
+    })
+}
+
 function login() {
     let data = {
         username: $("#username").val(),
@@ -17,24 +36,5 @@ function login() {
         } else {
             $("#error-text").text("Invalid login: Try again")
         }
-    })
-}
-
-function register() {
-    let data = {
-        username: $("#username").val(),
-        password: $("#password").val()
-    }
-
-    fetch('/register', {
-        method: 'POST',
-        body: JSON.stringify(data),
-        headers: {
-            'Content-type': 'application/json'
-        }
-    }).then(response => response.json()).then((data) => {
-        // On success, redirect (refresh) to login
-        console.log(data.success);
-        console.log(data.message);
     })
 }
