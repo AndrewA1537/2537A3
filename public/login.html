@@ -22,7 +22,7 @@
 
     <!-- NAV BAR -->
     <nav>
-        <a href="./index.html">Home</a>
+        <a href="./login.html">Login</a>
 
         <a href="./search.html">Search</a>
 
@@ -37,19 +37,25 @@
             <p>Please login before entering</p>
         </div>
         <div class="row">
+            <!-- js form to take client info and be passed on to js functions -->
             <form action="/login" method="post">
                 <div>
                     <div class="col">
+                        <!-- user enters username -->
                         <label for="username">Username</label>
                         <input type="username" class="form" id="username" name="username" placeholder="Username" required>
                     </div>
                     <div class="col">
+                        <!-- user enters password -->
                         <label for="password">Password</label>
                         <input type="password" class="form" id="password" name="password" placeholder="Password" required>
                     </div>
+                    <!-- error text -->
                     <p id="error-text" style="color: black;"></p>
+                    <!-- if login pressed then call login() -->
                     <button type="button" onclick="login()" class="button">Log in</button>
-                    <button type="button" onclick="registerAccount()" class="button">Register</button>
+                    <!-- if register pressed then call register() -->
+                    <button type="button" onclick="register()" class="button">Register</button>
             </form>
             </div>
     </main>
