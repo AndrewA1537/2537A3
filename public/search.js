@@ -1,84 +1,104 @@
 var userId = 1;
 
+// function to load pokemons
 async function loadPokemonById(pokemonId) {
+    // try catch block to catch error if necessary
     try {
-        const pokemon = await $.get(`/pokemon/${pokemonId}/`, function (pokemon, status) {});
+        // try to get pokemon 
+        const pokemon = await $.get(`/pokemon/${pokemonId}/`, function() {});
+        // return pokemon
         return pokemon[0];
+        // catch error 
     } catch {
-        let result = `
-            <p>Pokemon #${pokemonId} does not exist!</p>
-        `
-        $("#results").html(result);
-    }
-}
+        let tmp = `
+            <p>Pokemon #${pokemonId} error</p>
+                `
+        $("#results").html(tmp);
+    };
+};
 
+// function to load pokemons by name
 async function loadPokemonByName(pokemonName) {
+    // try to get pokemon 
     try {
-        const pokemon = await $.get(`/name/${pokemonName}/`, function (pokemon, status, xhr) {});
+        const pokemon = await $.get(`/name/${pokemonName}/`, function() {});
+        // return pokemon
         return pokemon[0];
+        // catch error 
     } catch {
-        let result = `
-            <p>${pokemonName} does not exist!</p>
-        `
-        $("#results").html(result);
-    }
-}
+        let tmp = `
+            <p>${pokemonName} error</p>
+                `
+        $("#results").html(tmp);
+    };
+};
 
+// function to load pokemons by type
 async function loadPokemonListByType(type) {
+    // try to get pokemon 
     try {
-        return await $.get(`/type/${type}/`, function (pokemon, status) {});
+        // return pokemon
+        return await $.get(`/type/${type}/`, function() {});
+        // catch error 
     } catch {
-        let result = `
+        let tmp = `
             <p>Did not find any pokemon of type ${type}.</p>
-        `
-        $("#results").html(result);
-    }
-}
+                `
+        $("#results").html(tmp);
+    };
+};
 
+// function to load timeline of user
 async function loadTimeline() {
+    // try to load timeline
     try {
-        const timeline = await $.get(`/timeline/`, function (timeline, status) {});
+        const timeline = await $.get(`/timeline/`, function() {});
+        // retirm to,e;ome
         return timeline;
+        // catch
     } catch {
         return null;
-    }
-}
+    };
+};
 
-// Gets the basic data needed to display a pokemon to the client.
-async function getPokemonBasicData(name) {
+// function to get pokemon data for the client
+async function getPokemonData(name) {
     let pokemon = await loadPokemonByName(name);
-    let result = {
+    // set the gathered data
+    let tmp = {
         id: pokemon.id,
         name: pokemon.name,
         sprite: pokemon.sprite,
         price: pokemon.price
     };
-    return result;
+    return tmp;
 }
 
-// Gets the basic data needed to display a pokemon to the client.
-async function getPokemonBasicDataById(id) {
+// function to get pokemon data for the client
+async function getPokemonDataById(id) {
     let pokemon = await loadPokemonById(id);
-    let result = {
+    // set the gathered data
+    let tmp = {
         id: pokemon.id,
         name: pokemon.name,
         sprite: pokemon.sprite,
         price: pokemon.price
     };
-    return result;
+    return tmp;
 }
 
-// Searches a pokemon by name and appends it to the DOM if it exists
-async function searchByName(name=$("#search-box").val()) {
-    await getPokemonBasicData(name).then((pokemon) => {
-        let grid = `
-            <div id="grid">
-            `;
+// function to search pokemon by name and display html for it
+async function searchByName(name = $("#search-box").val()) {
+    await getPokemonData(name).then((pokemon) => {
+        let tmp = `
+                <div id="grid">
+                `;
+        // iterate through and display pokemon
         for (row = 0; row < 1; row++) {
-            grid += `<div class="row">`;
+            tmp += `<div class="row">`;
             for (col = 0; col < 1; col++) {
                 index = 0;
-                grid += `
+                tmp += `
                     <div class="img-container">
                         <img src="${pokemon.sprite}" alt="${pokemon.name}" style="width:100%"
                             onclick="location.href='pokemon.html?id=${pokemon.id}'" class="pokemon-image">
@@ -91,33 +111,34 @@ async function searchByName(name=$("#search-box").val()) {
                         </div>
                     </div> 
                     `;
-            }
-            grid += `</div>`;
-        }
-        grid += `</div>`;
-        $("#results").html(grid);
+            };
+            tmp += `</div>`;
+        };
+        tmp += `</div>`;
+        $("#results").html(tmp);
     });
-
     loadTimelineHandler();
-}
+};
 
-async function searchByType(type=$("#search-box").val()) {
+// function to search pokemon by type and display html for it
+async function searchByType(type = $("#search-box").val()) {
     let resultList = await loadPokemonListByType(type);
     let numberOfResults = resultList.length;
     let rows = Math.ceil(numberOfResults / 3);
-    let grid = `
-        <div id="grid">
-        `;
+    let tmp = `
+            <div id="grid">
+            `;
+    // iterate through and display pokemon
     let index = 0;
     for (row = 0; row < rows; row++) {
-        grid += `<div class="row">`;
+        tmp += `<div class="row">`;
         for (col = 0; col < 3; col++) {
             if (index >= numberOfResults) {
                 break;
             }
             pokemonJSON = resultList[index++];
-            await getPokemonBasicDataById(pokemonJSON.id).then((pokemon) => {
-                grid += `
+            await getPokemonDataById(pokemonJSON.id).then((pokemon) => {
+                tmp += `
                     <div class="img-container">
                         <img src="${pokemon.sprite}" alt="${pokemon.name}" style="width:100%"
                             onclick="location.href='pokemon.html?id=${pokemon.id}'" class="pokemon-image">
@@ -130,51 +151,58 @@ async function searchByType(type=$("#search-box").val()) {
                         </div>
                     </div> 
                     `;
-            })
-        }
-        grid += `</div>`;
-    }
-    grid += `</div>`;
-    $("#results").html(grid);
-    
+            });
+        };
+        tmp += `</div>`;
+    };
+    tmp += `</div>`;
+    $("#results").html(tmp);
     loadTimelineHandler();
-}
+};
 
+// function to timeline
 async function loadTimelineHandler() {
     await loadTimeline().then((timeline) => {
+        // empty timeline before
         $("#timeline ul").empty();
-        let text = ""
+        let tmp = ""
         timeline.forEach(entry => {
             let timeData = entry.timestamp.split("T")
-            text += `<li onclick="parseQuery('${entry.query}')">Query: ${entry.query}<br>${timeData[0]} ${timeData[1].substring(0,8)}</li>`
+                // create html of timeline data
+            tmp += `<li onclick="parseQuery('${entry.query}')">Query: ${entry.query}<br>${timeData[0]} ${timeData[1].substring(0,8)}</li>`
         });
-        $("#timeline ul").append(text);
+        $("#timeline ul").append(tmp);
     })
 }
 
+// funtion to parse pokemon data query
 async function parseQuery(query) {
     let routes = query.split("/")
+        // split by name
     if (routes[1] === "name") {
         await searchByName(routes[2])
+            // split by type
     } else if (routes[1] === "type") {
         await searchByType(routes[2])
-    } else if (routes[1] === "ability") {
-        await searchByAbility(routes[2])
     } else {
-        console.log("Error parsing the query routes!")
+        // print error message
+        console.log("Error")
     }
 }
 
+// funtion to increase quantity of pokemon card to be added to cart
 function increaseQuantity(pokemonId) {
     let quantityElement = document.getElementById(`card-quantity-${pokemonId}`);
     quantityElement.innerHTML = parseInt(quantityElement.innerHTML) + 1
 }
 
+// funtion to decrease quantity of pokemon card to be added to cart
 function decreaseQuantity(pokemonId) {
     let quantityElement = document.getElementById(`card-quantity-${pokemonId}`);
     quantityElement.innerHTML = Math.max(0, parseInt(quantityElement.innerHTML) - 1)
 }
 
+// function to add pokemon card and data to cart
 function addToCart(pokemonId) {
     let quantity = parseInt(document.getElementById(`card-quantity-${pokemonId}`).innerHTML)
     let data = {
@@ -182,16 +210,15 @@ function addToCart(pokemonId) {
         pokemonId: pokemonId,
         quantity: quantity
     }
-
+    // fetch promise
     fetch('/addtocart', {
         method: 'POST',
         body: JSON.stringify(data),
         headers: {
             'Content-type': 'application/json'
         }
-    }).then(response => {
-        alert(`Added to cart!`)
+    }).then( () => {
+        alert(`Added to cart`)
     });
-}
-
+};
 loadTimelineHandler();

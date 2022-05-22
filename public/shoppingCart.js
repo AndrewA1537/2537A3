@@ -1,7 +1,10 @@
-var taxAmount = 0.06;
+// set a pre determined tax ammount
+var taxAmount = 0.12;
+// empty subtotal ammount
 var subtotal = 0;
 let userId = 1;
 
+// function to load pokemon in the shopping cart
 async function loadPokemon(pokemonId, quantity) {
     let pokemon = await loadPokemonById(pokemonId);
     let tmp = `
@@ -21,18 +24,22 @@ async function loadPokemon(pokemonId, quantity) {
                 </div>
             `
     $("#cart").append(tmp);
+    // calculate the cost of each pokemon
     subtotal += parseFloat(pokemon.price) * parseInt(quantity);
 }
 
+// function to diplay the total amounts of all pokemon in the cart
 function loadShoppingCart() {
     let data = {userId: userId}
 
+    // fetch promise to object
     fetch('/cart', {
         method: 'POST',
         body: JSON.stringify(data),
         headers: { 'Content-type': 'application/json' }
     }).then(response => response.json()).then((data) => {
         subtotal = 0;
+        // for each pokemon in the cart calculate to payment amounts
         data.cart.forEach(async (pokemon) => {
             await loadPokemon(pokemon.pokemonId, pokemon.quantity)
             $("#subtotal").text(subtotal.toFixed(2))
@@ -42,10 +49,10 @@ function loadShoppingCart() {
     });
 };
 
+// function to load pokemon by Id borrowed from other page
 async function loadPokemonById(pokemonId) {
     const pokemon = await $.get(`/pokemon/${pokemonId}/`, function () {
     });
     return pokemon[0];
 }
-
 loadShoppingCart();
