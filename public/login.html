@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>A3 /login</title>
+    <link rel="stylesheet" href="index.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+
+<body>
+    <header>
+        <h1>
+            Login
+        </h1>
+    </header>
+
+    <nav>
+        <a href="./index.html">Home</a>
+
+        <a href="./search.html">Search</a>
+
+        <a href="./cart.html">Cart</a>
+
+        <a href="./profile.html">Profile</a>
+    </nav>
+
+    <main>
+        <div class="row">
+            <p>
+                Welcome to Poke-info! Please Log in with your credentials below, or Register to create a new account.
+            </p>
+        </div>
+        <div class="row">
+            <form action="/login" method="post">
+                <div>
+                    <div class="col">
+                        <label for="username">Username</label>
+                        <input type="username" class="form" id="username" name="username" placeholder="Username" required>
+                    </div>
+                    <div class="col">
+                        <label for="password">Password</label>
+                        <input type="password" class="form" id="password" name="password" placeholder="Password" required>
+                    </div>
+                    <p id="error-text" style="color: red;"></p>
+                    <button type="button" onclick="login()" class="button">Log in</button>
+                    <button type="button" onclick="registerAccount()" class="button">Register</button>
+            </form>
+            </div>
+    </main>
+
+    <footer>
+        <h5>
+            Anderew Anca© Kanto Pokédex 2022
+        </h5>
+    </footer>
+    <script src="login.js"></script>
+</body>
+
+</html>

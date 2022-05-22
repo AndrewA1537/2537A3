@@ -1,119 +1,247 @@
-// global variable images
-image = "";
+var userId = 1;
 
-function getPokemonByType(typeOfPokemon) {
-    $("main").empty();
-
-    for (i = 1; i < 152; i++) {
-
-        $.ajax({
-            url: `https://pokeapi.co/api/v2/pokemon/${i}/`,
-            type: "GET",
-            success: function(data) {
-                for (x of data.types) {
-                    if (x.type.name == typeOfPokemon) {
-
-                        image =
-                            `<div class="image_container">
-                            <div style="text-align: center;">${data.id}</div>
-                            <div style="text-align: center; class="pokeName">${data.name}</div>
-                            <a href="/profile/${data.id}">
-                            <img src="${data.sprites.other["official-artwork"].front_default}">
-                            </a>
-                            </div>`;
-
-                        $("main").append(image);
-                    };
-                };
-            }
-        });
-    };
-};
-
-function getPokemonByName() {
-    $("main").empty();
-
-    pokeName = $("#poke_name").val();
-
-    $.ajax({
-        url: `https://pokeapi.co/api/v2/pokemon/${pokeName}/`,
-        type: "GET",
-        success: function(data) {
-
-            if (pokeName == Number(pokeName)) {
-                alert("Please enter a string")
-            } else {
-                image =
-                    `<div class="image_container">
-                    <div style="text-align: center;">${data.id}</div>
-                    <div style="text-align: center; class="pokeName">${data.name}</div>
-                    <a href="/profile/${data.id}">
-                    <img src="${data.sprites.other["official-artwork"].front_default}">
-                    </a>
-                    <button class='delete'>Delete</button>
-                    </div>`;
-
-                $("main").append(image);
-                insertSearchTimeline();
-            };
-        }
-    });
-};
-
-var now = new Date(Date.now());
-var formatted = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
-
-function insertTypeTimeline(pokeType) {
-    $.ajax({
-        url: `http://localhost:3000/timeline/create`,
-        type: "PUT",
-        data: {
-            text: `Client searched by Type: ${pokeType}`,
-            time: `At: ${now}`,
-            hits: 1
-        },
-        success: function(r) {
-            console.log(r);
-        }
-    });
-};
-
-function insertSearchTimeline(pokeName) {
-    pokeName = $("#poke_name").val();
-    $.ajax({
-        url: `http://localhost:3000/timeline/create`,
-        type: "PUT",
-        data: {
-            text: `Client searched for: ${pokeName}`,
-            time: `At: ${now}`,
-            hits: 1
-        },
-        success: function(r) {
-            console.log(r);
-        }
-    });
-};
-
-// function to remove pokemon search
-function hide() {
-    $(this).parent().empty();
-};
-
-function setup() {
-    // get by type
-    $("#poke_type").change(() => {
-        pokeType = $("#poke_type option:selected").val();
-        getPokemonByType(pokeType);
-
-
-        insertTypeTimeline(pokeType);
-    });
-
-    // search by name
-    $("#name_search_button").click(getPokemonByName);
-
-    $("body").on("click", ".delete", hide);
+async function loadPokemonById(pokemonId) {
+    try {
+        const pokemon = await $.get(`/pokemon/${pokemonId}/`, function (pokemon, status) {});
+        return pokemon[0];
+    } catch {
+        let result = `
+            <p>Pokemon #${pokemonId} does not exist!</p>
+        `
+        $("#results").html(result);
+    }
 }
-// executes when DOM is completely loaded in browser
-// callback function to call setup when loaded
-$(document).ready(setup);
+
+async function loadPokemonByName(pokemonName) {
+    try {
+        const pokemon = await $.get(`/name/${pokemonName}/`, function (pokemon, status, xhr) {});
+        return pokemon[0];
+    } catch {
+        let result = `
+            <p>${pokemonName} does not exist!</p>
+        `
+        $("#results").html(result);
+    }
+}
+
+async function loadPokemonListByType(type) {
+    try {
+        return await $.get(`/type/${type}/`, function (pokemon, status) {});
+    } catch {
+        let result = `
+            <p>Did not find any pokemon of type ${type}.</p>
+        `
+        $("#results").html(result);
+    }
+}
+
+async function loadPokemonListByAbility(ability) {
+    try {
+        return await $.get(`/ability/${ability}/`, function (pokemon, status) {});
+    } catch {
+        let result = `
+            <p>Did not find any pokemon with the ability ${ability}.</p>
+        `
+        $("#results").html(result);
+    }
+}
+
+async function loadTimeline() {
+    try {
+        const timeline = await $.get(`/timeline/`, function (timeline, status) {});
+        return timeline;
+    } catch {
+        return null;
+    }
+}
+
+// Gets the basic data needed to display a pokemon to the client.
+async function getPokemonBasicData(name) {
+    let pokemon = await loadPokemonByName(name);
+    let result = {
+        id: pokemon.id,
+        name: pokemon.name,
+        sprite: pokemon.sprite,
+        price: pokemon.price
+    };
+    return result;
+}
+
+// Gets the basic data needed to display a pokemon to the client.
+async function getPokemonBasicDataById(id) {
+    let pokemon = await loadPokemonById(id);
+    let result = {
+        id: pokemon.id,
+        name: pokemon.name,
+        sprite: pokemon.sprite,
+        price: pokemon.price
+    };
+    return result;
+}
+
+// Searches a pokemon by name and appends it to the DOM if it exists
+async function searchByName(name=$("#search-box").val()) {
+    await getPokemonBasicData(name).then((pokemon) => {
+        let grid = `
+            <div id="grid">
+            `;
+        for (row = 0; row < 1; row++) {
+            grid += `<div class="row">`;
+            for (col = 0; col < 1; col++) {
+                index = 0;
+                grid += `
+                    <div class="img-container">
+                        <img src="${pokemon.sprite}" alt="${pokemon.name}" style="width:100%"
+                            onclick="location.href='pokemon.html?id=${pokemon.id}'" class="pokemon-image">
+                        <div class="pokemon-buy-panel row">
+                            <h3 class="col card-price">$${pokemon.price}</h3>
+                            <button class="col card-quantity-button" onclick="decreaseQuantity(${pokemon.id})">-</button>
+                            <h3 class="col card-quantity" id="card-quantity-${pokemon.id}">1</h3>
+                            <button class="col card-quantity-button" onclick="increaseQuantity(${pokemon.id})">+</button>
+                            <button class="col add-to-cart-button" onclick="addToCart(${pokemon.id})">Add To Cart</button>
+                        </div>
+                    </div> 
+                    `;
+            }
+            grid += `</div>`;
+        }
+        grid += `</div>`;
+        $("#results").html(grid);
+    });
+
+    loadTimelineHandler();
+}
+
+async function searchByAbility(ability=$("#search-box").val()) {
+    let resultList = await loadPokemonListByAbility(ability);
+    let numberOfResults = resultList.length;
+    let rows = Math.ceil(numberOfResults / 3);
+    let grid = `
+        <div id="grid">
+        `;
+    let index = 0;
+    for (row = 0; row < rows; row++) {
+        grid += `<div class="row">`;
+        for (col = 0; col < 3; col++) {
+            if (index >= numberOfResults) {
+                break;
+            }
+            pokemonJSON = resultList[index++];
+            await getPokemonBasicDataById(pokemonJSON.id).then((pokemon) => {
+                grid += `
+                    <div class="img-container">
+                        <img src="${pokemon.sprite}" alt="${pokemon.name}" style="width:100%"
+                            onclick="location.href='pokemon.html?id=${pokemon.id}'" class="pokemon-image">
+                        <div class="pokemon-buy-panel row">
+                            <h3 class="col card-price">$${pokemon.price}</h3>
+                            <button class="col card-quantity-button" onclick="decreaseQuantity(${pokemon.id})">-</button>
+                            <h3 class="col card-quantity" id="card-quantity-${pokemon.id}">1</h3>
+                            <button class="col card-quantity-button" onclick="increaseQuantity(${pokemon.id})">+</button>
+                            <button class="col add-to-cart-button" onclick="addToCart(${pokemon.id})">Add To Cart</button>
+                        </div>
+                    </div> 
+                    `;
+            })
+        }
+        grid += `</div>`;
+    }
+    grid += `</div>`;
+    $("#results").html(grid);
+    
+    loadTimelineHandler();
+}
+
+async function searchByType(type=$("#search-box").val()) {
+    let resultList = await loadPokemonListByType(type);
+    let numberOfResults = resultList.length;
+    let rows = Math.ceil(numberOfResults / 3);
+    let grid = `
+        <div id="grid">
+        `;
+    let index = 0;
+    for (row = 0; row < rows; row++) {
+        grid += `<div class="row">`;
+        for (col = 0; col < 3; col++) {
+            if (index >= numberOfResults) {
+                break;
+            }
+            pokemonJSON = resultList[index++];
+            await getPokemonBasicDataById(pokemonJSON.id).then((pokemon) => {
+                grid += `
+                    <div class="img-container">
+                        <img src="${pokemon.sprite}" alt="${pokemon.name}" style="width:100%"
+                            onclick="location.href='pokemon.html?id=${pokemon.id}'" class="pokemon-image">
+                        <div class="pokemon-buy-panel row">
+                            <h3 class="col card-price">$${pokemon.price}</h3>
+                            <button class="col card-quantity-button" onclick="decreaseQuantity(${pokemon.id})">-</button>
+                            <h3 class="col card-quantity" id="card-quantity-${pokemon.id}">1</h3>
+                            <button class="col card-quantity-button" onclick="increaseQuantity(${pokemon.id})">+</button>
+                            <button class="col add-to-cart-button" onclick="addToCart(${pokemon.id})">Add To Cart</button>
+                        </div>
+                    </div> 
+                    `;
+            })
+        }
+        grid += `</div>`;
+    }
+    grid += `</div>`;
+    $("#results").html(grid);
+    
+    loadTimelineHandler();
+}
+
+async function loadTimelineHandler() {
+    await loadTimeline().then((timeline) => {
+        $("#timeline ul").empty();
+        let text = ""
+        timeline.forEach(entry => {
+            let timeData = entry.timestamp.split("T")
+            text += `<li onclick="parseQuery('${entry.query}')">Query: ${entry.query}<br>${timeData[0]} ${timeData[1].substring(0,8)}</li>`
+        });
+        $("#timeline ul").append(text);
+    })
+}
+
+async function parseQuery(query) {
+    let routes = query.split("/")
+    if (routes[1] === "name") {
+        await searchByName(routes[2])
+    } else if (routes[1] === "type") {
+        await searchByType(routes[2])
+    } else if (routes[1] === "ability") {
+        await searchByAbility(routes[2])
+    } else {
+        console.log("Error parsing the query routes!")
+    }
+}
+
+function increaseQuantity(pokemonId) {
+    let quantityElement = document.getElementById(`card-quantity-${pokemonId}`);
+    quantityElement.innerHTML = parseInt(quantityElement.innerHTML) + 1
+}
+
+function decreaseQuantity(pokemonId) {
+    let quantityElement = document.getElementById(`card-quantity-${pokemonId}`);
+    quantityElement.innerHTML = Math.max(0, parseInt(quantityElement.innerHTML) - 1)
+}
+
+function addToCart(pokemonId) {
+    let quantity = parseInt(document.getElementById(`card-quantity-${pokemonId}`).innerHTML)
+    let data = {
+        userId: userId,
+        pokemonId: pokemonId,
+        quantity: quantity
+    }
+
+    fetch('/addtocart', {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: {
+            'Content-type': 'application/json'
+        }
+    }).then(response => {
+        alert(`Added to cart!`)
+    });
+}
+
+loadTimelineHandler();
