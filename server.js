@@ -41,10 +41,10 @@ const pokemonSchema = new mongoose.Schema({
     sprite: String
 }, {
     // collection name in mongoDB
-    collection: 'pokemons'
+    collection: 'pokemon'
 });
 
-const pokemonModel = mongoose.model("pokemons", pokemonSchema);
+const pokemonModel = mongoose.model("pokemon", pokemonSchema);
 
 // timeline schema to add/manipulate in mongoDB
 const timelineSchema = new mongoose.Schema({
@@ -52,10 +52,10 @@ const timelineSchema = new mongoose.Schema({
     timestamp: Date
 }, {
     // collection name in mongoDB
-    collection: 'timelines'
+    collection: 'timeline'
 });
 
-const timelineModel = mongoose.model("timelines", timelineSchema);
+const timelineModel = mongoose.model("timeline", timelineSchema);
 
 // user schema to add/manipulate in mongoDB
 const usersSchema = new mongoose.Schema({

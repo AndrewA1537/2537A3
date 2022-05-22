@@ -15,11 +15,9 @@ async function loadPokemon(pokemonId, quantity) {
                     </div>
 
                     <div class="row pokemon-buy-details">
-                        <h3 class="col card-price">${pokemon.name}</h3>
-                        <h3 class="col card-price">$${pokemon.price}</h3>
-                        <h3 class="col card-quantity" id="card-quantity-${pokemon.id}">Qty: ${quantity}</h3>
+                    <h3 class="col card-price">$${pokemon.price}</h3>
+                        <h3 class="col card-quantity" id="card-quantity-${pokemon.id}">Amount: ${quantity}</h3>
                         <h3 class="col card-total-price"> Total: $${(pokemon.price * quantity).toFixed(2)}</h3>
-                        <button class="col add-to-cart-button" onclick="removeFromCart(${pokemon.id})">Remove</button>
                     </div>
                 </div>
             `

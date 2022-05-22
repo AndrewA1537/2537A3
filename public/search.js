@@ -53,7 +53,7 @@ async function loadTimeline() {
     // try to load timeline
     try {
         const timeline = await $.get(`/timeline/`, function() {});
-        // retirm to,e;ome
+        // return timeline
         return timeline;
         // catch
     } catch {
@@ -104,8 +104,8 @@ async function searchByName(name = $("#search-box").val()) {
                             onclick="location.href='pokemon.html?id=${pokemon.id}'" class="pokemon-image">
                         <div class="pokemon-buy-panel row">
                             <h3 class="col card-price">$${pokemon.price}</h3>
-                            <button class="col card-quantity-button" onclick="decreaseQuantity(${pokemon.id})">-</button>
                             <h3 class="col card-quantity" id="card-quantity-${pokemon.id}">1</h3>
+                            <button class="col card-quantity-button" onclick="decreaseQuantity(${pokemon.id})">-</button>
                             <button class="col card-quantity-button" onclick="increaseQuantity(${pokemon.id})">+</button>
                             <button class="col add-to-cart-button" onclick="addToCart(${pokemon.id})">Add To Cart</button>
                         </div>
@@ -144,8 +144,8 @@ async function searchByType(type = $("#search-box").val()) {
                             onclick="location.href='pokemon.html?id=${pokemon.id}'" class="pokemon-image">
                         <div class="pokemon-buy-panel row">
                             <h3 class="col card-price">$${pokemon.price}</h3>
-                            <button class="col card-quantity-button" onclick="decreaseQuantity(${pokemon.id})">-</button>
                             <h3 class="col card-quantity" id="card-quantity-${pokemon.id}">1</h3>
+                            <button class="col card-quantity-button" onclick="decreaseQuantity(${pokemon.id})">-</button>
                             <button class="col card-quantity-button" onclick="increaseQuantity(${pokemon.id})">+</button>
                             <button class="col add-to-cart-button" onclick="addToCart(${pokemon.id})">Add To Cart</button>
                         </div>

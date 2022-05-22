@@ -4,7 +4,7 @@ function register() {
     let data = {
         username: $("#username").val(),
         password: $("#password").val()
-    }
+    };
 
     // fetch promise to response objects
     fetch('/register', {
@@ -19,8 +19,8 @@ function register() {
         // if successfull display message and data
         console.log(data.success);
         console.log(data.message);
-    })
-}
+    });
+};
 
 // function to handle the login button being clicked
 function login() {
@@ -28,7 +28,7 @@ function login() {
     let data = {
         username: $("#username").val(),
         password: $("#password").val()
-    }
+    };
 
     // fetch promise to response objects
     fetch('/login', {
