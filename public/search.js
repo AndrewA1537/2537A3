@@ -1,4 +1,4 @@
-var userId = 1;
+var userId =  1;
 
 async function loadPokemonById(pokemonId) {
     try {
