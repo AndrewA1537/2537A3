@@ -15,7 +15,7 @@ function login() {
         if (data.success) {
             window.location.href = '/profile'
         } else {
-            $("#error-text").text("Invalid credentials. Please try again.")
+            $("#error-text").text("Invalid login: Try again")
         }
     })
 }

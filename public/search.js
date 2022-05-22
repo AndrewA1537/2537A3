@@ -1,4 +1,4 @@
-var userId =  1;
+var userId = 1;
 
 async function loadPokemonById(pokemonId) {
     try {
@@ -30,17 +30,6 @@ async function loadPokemonListByType(type) {
     } catch {
         let result = `
             <p>Did not find any pokemon of type ${type}.</p>
-        `
-        $("#results").html(result);
-    }
-}
-
-async function loadPokemonListByAbility(ability) {
-    try {
-        return await $.get(`/ability/${ability}/`, function (pokemon, status) {});
-    } catch {
-        let result = `
-            <p>Did not find any pokemon with the ability ${ability}.</p>
         `
         $("#results").html(result);
     }
@@ -109,45 +98,6 @@ async function searchByName(name=$("#search-box").val()) {
         $("#results").html(grid);
     });
 
-    loadTimelineHandler();
-}
-
-async function searchByAbility(ability=$("#search-box").val()) {
-    let resultList = await loadPokemonListByAbility(ability);
-    let numberOfResults = resultList.length;
-    let rows = Math.ceil(numberOfResults / 3);
-    let grid = `
-        <div id="grid">
-        `;
-    let index = 0;
-    for (row = 0; row < rows; row++) {
-        grid += `<div class="row">`;
-        for (col = 0; col < 3; col++) {
-            if (index >= numberOfResults) {
-                break;
-            }
-            pokemonJSON = resultList[index++];
-            await getPokemonBasicDataById(pokemonJSON.id).then((pokemon) => {
-                grid += `
-                    <div class="img-container">
-                        <img src="${pokemon.sprite}" alt="${pokemon.name}" style="width:100%"
-                            onclick="location.href='pokemon.html?id=${pokemon.id}'" class="pokemon-image">
-                        <div class="pokemon-buy-panel row">
-                            <h3 class="col card-price">$${pokemon.price}</h3>
-                            <button class="col card-quantity-button" onclick="decreaseQuantity(${pokemon.id})">-</button>
-                            <h3 class="col card-quantity" id="card-quantity-${pokemon.id}">1</h3>
-                            <button class="col card-quantity-button" onclick="increaseQuantity(${pokemon.id})">+</button>
-                            <button class="col add-to-cart-button" onclick="addToCart(${pokemon.id})">Add To Cart</button>
-                        </div>
-                    </div> 
-                    `;
-            })
-        }
-        grid += `</div>`;
-    }
-    grid += `</div>`;
-    $("#results").html(grid);
-    
     loadTimelineHandler();
 }
 

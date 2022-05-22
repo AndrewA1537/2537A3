@@ -90,11 +90,9 @@ main {
     font-size: 1rem;
     font-weight: bold;
     background-color: #333;
-    border-radius: 2rem;
 }
 
 #search-box {
-    border-radius: 2rem;
     padding: 8px;
     margin: 8px;
     font-size: 1rem;
@@ -154,7 +152,6 @@ i:hover {
 
 #timeline {
     border: rgb(0, 0, 0) 3px solid;
-    border-radius: 1rem;
     background-color: #333;
     color: white;
     margin: 1rem;
@@ -198,7 +195,6 @@ i:hover {
     font-size: 1.5rem;
     font-weight: bold;
     background-color: #333;
-    border-radius: 10rem;
     margin: 0 1rem;
 }
 
@@ -234,9 +230,9 @@ i:hover {
 }
 
 .form {
-    margin: 0.5rem;
-    padding: 0.5rem;
-    border-radius: 10rem;
+    margin: 0.75rem;
+    padding: 0.75rem;
+    border-radius: 0rem;
 }
 
 @media screen and (max-width: 720px) {
