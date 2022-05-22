@@ -44,7 +44,6 @@ main {
 .info-container,
 .thumbnail-container {
     padding: 0.5rem;
-    border-radius: 1rem;
     border: 2px black solid;
     background-color: white;
     margin: 1rem;
@@ -62,30 +61,14 @@ main {
     justify-content: center;
 }
 
-.pokemon-image:hover {
-    cursor: pointer;
-}
-
 .thumbnail-container>img {
     max-width: 120px;
     height: auto;
 }
 
-h1 {
-    margin: 0px;
-}
-
-main {
-    margin-bottom: 2rem;
-}
-
-#search-form {
-    padding: 0.5rem;
-}
-
 #search-form button {
     padding: 0.5rem;
-    border: 3px black solid;
+    border: 2px black solid;
     color: white;
     font-size: 1rem;
     font-weight: bold;
@@ -93,47 +76,10 @@ main {
 }
 
 #search-box {
-    padding: 8px;
-    margin: 8px;
     font-size: 1rem;
 }
 
-.pokemon-name {
-    margin: 1rem;
-    font-size: 1.5rem;
-}
 
-.pokemon-type {
-    background-color: lightblue;
-    border: #95b8ff 2px solid;
-    margin: 0.25rem 0.5rem;
-    font-size: 1rem;
-    border-radius: 0.5rem;
-}
-
-.pokemon-type>h2 {
-    padding: 0rem 1rem;
-}
-
-.pokemon-stat {
-    background-color: lightblue;
-    border: #dfdfdf 1px solid;
-    margin: 0 0.5rem;
-    font-size: 1rem;
-    border-radius: 0.5rem;
-    width: 6.5rem;
-    text-align: center;
-}
-
-.pokemon-stat>h3 {
-    margin: 0;
-    padding: 1rem;
-}
-
-.pokemon-stat>p {
-    margin: 0;
-    padding: 1rem;
-}
 
 i {
     font-size: 3rem;
@@ -179,7 +125,6 @@ i:hover {
     color: #4d88ff;
     background-color: #ffd3d0;
     font-weight: bold;
-    border-radius: 1rem;
     line-height: 1.5rem;
 }
 
@@ -189,8 +134,8 @@ i:hover {
 
 .card-quantity-button,
 .button {
-    padding: 0.5rem;
-    border: 3px black solid;
+    padding: 0rem;
+    border: 2px black solid;
     color: white;
     font-size: 1.5rem;
     font-weight: bold;
@@ -199,8 +144,8 @@ i:hover {
 }
 
 .add-to-cart-button {
-    padding: 0.5rem;
-    border: 3px black solid;
+    padding: 0rem;
+    border: 2px black solid;
     color: white;
     font-size: 0.8rem;
     font-weight: bold;
@@ -229,9 +174,8 @@ i:hover {
 }
 
 .form {
-    margin: 0.75rem;
-    padding: 0.75rem;
-    border-radius: 0rem;
+    margin: 0.5rem;
+    padding: 0.5rem;
 }
 
 @media screen and (max-width: 720px) {
